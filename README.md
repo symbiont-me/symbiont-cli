@@ -39,12 +39,12 @@ SymbiontCLI is a powerful command-line interface tool designed for processing do
 Run the script with the following command:
 
 ```bash
-poetry run python symbiont_cli.py --loader_directory /path/to/documents --collection_name your_collection_name [options]
+poetry run python symbiont_cli.py --docs_directory /path/to/documents --collection_name your_collection_name [options]
 ```
 
 ### Required Arguments:
 
-- `--loader_directory`: Path to the directory containing PDF documents to process
+- `--docs_directory`: Path to the directory containing PDF documents to process
 - `--collection_name`: Name of the Qdrant collection to use
 
 ### Optional Arguments:
@@ -56,7 +56,7 @@ poetry run python symbiont_cli.py --loader_directory /path/to/documents --collec
 ### 📄 Example:
 
 ```bash
-python symbiont_cli.py --loader_directory ./documents --collection_name my_collection --k_value 5 --llm_response yes
+python symbiont_cli.py --docs_directory ./documents --collection_name my_collection --k_value 5 --llm_response yes
 ```
 
 Once the script is running, you can enter queries at the prompt. Type 'exit' to stop the program.
