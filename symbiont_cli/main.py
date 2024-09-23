@@ -14,6 +14,8 @@ from colorama import Fore, Style, init
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pydantic import SecretStr
+from langchain.callbacks import get_openai_callback
+
 
 # Initialize colorama
 init(autoreset=True)
@@ -173,8 +175,8 @@ class SymbiontCLI:
             logger.info("Document Metadata:")
             for key, value in doc.metadata.items():
                 logger.info(f"  {key}: {value}")
-            logger.info("\nPage Content:")
-            logger.info(self.__remove_next_line(doc.page_content))
+            logger.info("Page Content:")
+            logger.info("\n" + self.__remove_next_line(doc.page_content))
             logger.info("\n" + "=" * 40 + "\n")
 
     def perform_search_and_qa(self, query):
@@ -183,8 +185,10 @@ class SymbiontCLI:
             self.print_search_results(results)
             if self.args.llm_response.lower() == "no":
                 return
-            response = self.qa_stuff.run({"context": self.context, "query": query})
-            logger.info(response)
+            with get_openai_callback() as cb:
+                response = self.qa_stuff.run({"context": self.context, "query": query})
+                logger.critical("\n" + str(cb))
+                logger.info("\n" + response)
         except Exception as e:
             logger.error(f"Error during search and QA: {e}")
 
