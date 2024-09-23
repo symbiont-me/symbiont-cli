@@ -12,8 +12,8 @@ SymbiontCLI is a powerful command-line interface tool designed for processing do
 
 ## 🛠️ Prerequisites
 
-- Python 3.7+
-- Qdrant server running locally on port 6333
+- Poetry (https://python-poetry.org/docs/)
+- Qdrant server running locally on port 6333 (https://qdrant.tech/documentation/quickstart/)
 
 ## 📥 Installation
 
