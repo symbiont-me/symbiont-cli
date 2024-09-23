@@ -3,7 +3,6 @@ import argparse
 import logging
 from uuid import uuid4
 from langchain_openai import OpenAIEmbeddings
-from pydantic.v1 import parse
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
