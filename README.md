@@ -1,6 +1,7 @@
-# 🌟 SymbiontCLI 🌟
+# 🌟 Symbiont CLI 🌟
 
-SymbiontCLI is a powerful command-line interface tool designed for processing documents 📄 and performing question-answering tasks 🧠 using various language models and vector stores.
+Symbiont CLI is a powerful command-line interface tool designed for processing documents 📄 and performing question-answering tasks 🧠 using various language models and vector stores.
+It is an extension of the Symbiont app: https://github.com/symbiont-me/symbiont
 
 ## 🚀 Features
 
