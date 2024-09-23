@@ -19,8 +19,8 @@ SymbiontCLI is a powerful command-line interface tool designed for processing do
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/SymbiontCLI.git
-   cd SymbiontCLI
+   git clone git@github.com:symbiont-me/symbiont-cli.git
+   cd symbiont-cli
    ```
 
 2. Install the required dependencies:
