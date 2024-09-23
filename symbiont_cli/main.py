@@ -72,7 +72,7 @@ class SymbiontCLI:
             help="Name of the Qdrant collection",
         )
         parser.add_argument(
-            "k_value",
+            "--k_value",
             type=int,
             default=3,
             help="Number of documents to retrieve",
