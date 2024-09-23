@@ -45,6 +45,7 @@ class SymbiontCLI:
     def __init__(self):
         load_dotenv()
         self.api_key = os.environ.get("OPENAI_API_KEY")
+        self.llm_name = os.environ.get("LLM_NAME", "gpt-3.5-turbo")
         if not self.api_key:
             raise ValueError("Please set the OPENAI_API_KEY environment variable")
         self.embeddings = self.initialize_embeddings()
@@ -60,7 +61,7 @@ class SymbiontCLI:
             description="Process documents and store embeddings."
         )
         parser.add_argument(
-            "--loader_directory",
+            "--docs_directory",
             type=str,
             required=True,
             help="Directory to load documents from",
@@ -91,8 +92,8 @@ class SymbiontCLI:
         )
 
         args = parser.parse_args()
-        if not os.path.isdir(args.loader_directory):
-            raise ValueError(f"Directory {args.loader_directory} does not exist")
+        if not os.path.isdir(args.docs_directory):
+            raise ValueError(f"Directory {args.docs_directory} does not exist")
         return args
 
     def initialize_embeddings(self):
@@ -112,7 +113,7 @@ class SymbiontCLI:
                 vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
             )
             loader = DirectoryLoader(
-                self.args.loader_directory,
+                self.args.docs_directory,
                 glob="**/*.pdf",
                 show_progress=True,
                 loader_cls=PyMuPDFLoader,
@@ -133,18 +134,22 @@ class SymbiontCLI:
 
     def initialize_llm(self):
         return ChatOpenAI(
-            model="gpt-4o-mini",
+            model=self.llm_name,
             temperature=0.9,
             api_key=SecretStr(self.api_key),
         )
 
     def setup_qa(self):
+        default_base_prompt = (
+            "As an expert, use the following context to answer the question. "
+        )
+        "Given the following context and question, provide an answer. "
+        "Be concise and brief. If the CONTEXT does not provide information. "
+        "Answer: 'I don't have enough information':"
+        base_prompt = os.environ.get("QA_BASE_PROMPT", default_base_prompt)
         custom_prompt = PromptTemplate(
             template=(
-                "As an expert, use the following context to answer the question. "
-                "Answer your question in detail with real world examples. "
-                "Be concise and brief. If the CONTEXT does not provide information. "
-                "Answer: 'I don't have enough information':\n\n"
+                f"{base_prompt}\n\n"
                 "Context: {context}\n\n"
                 "Question: {question}\n\n"
                 "Answer:"
