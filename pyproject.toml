@@ -23,6 +23,7 @@ libmagic = "^1.0"
 python-magic = "^0.4.27"
 colorama = "^0.4.6"
 langchainhub = "^0.1.21"
+langchain-voyageai = "^0.1.2"
 
 
 [build-system]

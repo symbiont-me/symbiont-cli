@@ -155,6 +155,17 @@ yarl = ">=1.0,<2.0"
 speedups = ["Brotli", "aiodns (>=3.2.0)", "brotlicffi"]
 
 [[package]]
+name = "aiolimiter"
+version = "1.1.0"
+description = "asyncio rate limiter, a leaky bucket implementation"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "aiolimiter-1.1.0-py3-none-any.whl", hash = "sha256:0b4997961fc58b8df40279e739f9cf0d3e255e63e9a44f64df567a8c17241e24"},
+    {file = "aiolimiter-1.1.0.tar.gz", hash = "sha256:461cf02f82a29347340d031626c92853645c099cb5ff85577b831a7bd21132b5"},
+]
+
+[[package]]
 name = "aiosignal"
 version = "1.3.1"
 description = "aiosignal: a list of registered asynchronous callbacks"
@@ -2251,6 +2262,22 @@ files = [
 
 [package.dependencies]
 langchain-core = ">=0.3.0,<0.4.0"
+
+[[package]]
+name = "langchain-voyageai"
+version = "0.1.2"
+description = "An integration package connecting VoyageAI and LangChain"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "langchain_voyageai-0.1.2-py3-none-any.whl", hash = "sha256:777524d7187d0d8b275b2ef845736ac5c007621ef65f7ce25ee24273d19cb598"},
+    {file = "langchain_voyageai-0.1.2.tar.gz", hash = "sha256:355cac409e3f87a6bbd77d94a8d317860225ac58832dca7b7ce3afb073a74939"},
+]
+
+[package.dependencies]
+langchain-core = ">=0.3.0,<0.4.0"
+pydantic = ">=2,<3"
+voyageai = ">=0.2.1,<1"
 
 [[package]]
 name = "langchainhub"
@@ -6340,6 +6367,24 @@ docs = ["Sphinx (>=4.1.2,<4.2.0)", "sphinx-rtd-theme (>=0.5.2,<0.6.0)", "sphinxc
 test = ["Cython (>=0.29.36,<0.30.0)", "aiohttp (==3.9.0b0)", "aiohttp (>=3.8.1)", "flake8 (>=5.0,<6.0)", "mypy (>=0.800)", "psutil", "pyOpenSSL (>=23.0.0,<23.1.0)", "pycodestyle (>=2.9.0,<2.10.0)"]
 
 [[package]]
+name = "voyageai"
+version = "0.2.3"
+description = ""
+optional = false
+python-versions = "<4.0.0,>=3.7.1"
+files = [
+    {file = "voyageai-0.2.3-py3-none-any.whl", hash = "sha256:59c4958bd991e83cedb5a82d5e14ac698ce67e42713ea10467631a48ee272b15"},
+    {file = "voyageai-0.2.3.tar.gz", hash = "sha256:28322aa7a64cdaa774be6fcf3e4fd6a08694ea25acd5fadd1eff1b8ef8dab68a"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.5,<4.0"
+aiolimiter = ">=1.1.0,<2.0.0"
+numpy = ">=1.11"
+requests = ">=2.20,<3.0"
+tenacity = ">=8.0.1"
+
+[[package]]
 name = "watchfiles"
 version = "0.24.0"
 description = "Simple, modern and high performance file watching and code reload in python."
@@ -6765,4 +6810,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "9d18443c38da2b9b46a2d28b7989969ee5df80d74f1066142a4c9d6f0b34097c"
+content-hash = "8ffa81863c032b659356ae5aa5b9a740bb673361b9f6cbc1eab61c84ff59f752"

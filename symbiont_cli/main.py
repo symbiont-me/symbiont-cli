@@ -2,6 +2,7 @@ import os
 import argparse
 import logging
 from uuid import uuid4
+from langchain_community import vectorstores
 from langchain_openai import OpenAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
@@ -15,6 +16,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pydantic import SecretStr
 from langchain.callbacks import get_openai_callback
+from langchain_voyageai import VoyageAIEmbeddings
 
 
 # Initialize colorama
@@ -99,40 +101,66 @@ class SymbiontCLI:
         return args
 
     def initialize_embeddings(self):
-        if "OPENAI_API_KEY" in os.environ:
-            return OpenAIEmbeddings()
-        else:
+        if os.environ.get("EMBEDDINGS_MODEL", "").lower() == "openai":
+            if "OPENAI_API_KEY" in os.environ:
+                return OpenAIEmbeddings()
+            else:
+                raise ValueError("Please set the OPENAI_API_KEY environment variable")
+        if os.environ.get("EMBEDDINGS_MODEL", "").lower() == "sentence-transformers":
             model_id = "sentence-transformers/all-MiniLM-L6-v2"
             model_kwargs = {"device": "cpu"}
             return HuggingFaceEmbeddings(model_name=model_id, model_kwargs=model_kwargs)
+        if os.environ.get("EMBEDDINGS_MODEL", "").lower() == "voyage":
+            return VoyageAIEmbeddings(
+                voyage_api_key=os.environ.get("EMBEDDINGS_MODEL_API_KEY"),
+                model="voyage-3-lite",
+            )  # type: ignore
+        return HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
 
     def setup_vector_store(self):
-        if not self.client.collection_exists(collection_name=self.args.collection_name):
-            logger.info("Creating collection...")
-            vector_size = 1536 if isinstance(self.embeddings, OpenAIEmbeddings) else 384
-            self.client.create_collection(
-                collection_name=self.args.collection_name,
-                vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
-            )
-            loader = DirectoryLoader(
-                self.args.docs_directory,
-                glob="**/*.pdf",
-                show_progress=True,
-                loader_cls=PyMuPDFLoader,
-            )
-            documents = loader.load()
-            uuids = [str(uuid4()) for _ in range(len(documents))]
-            vector_store = QdrantVectorStore(
+        try:
+            if not self.client.collection_exists(
+                collection_name=self.args.collection_name
+            ):
+                logger.info("Creating collection...")
+                vector_size = None
+                if isinstance(self.embeddings, HuggingFaceEmbeddings):
+                    vector_size = 384
+                elif isinstance(self.embeddings, OpenAIEmbeddings):
+                    vector_size = 1536
+                elif isinstance(self.embeddings, VoyageAIEmbeddings):
+                    vector_size = 512
+                if vector_size is None:
+                    raise ValueError("Unknown vector size")
+                self.client.create_collection(
+                    collection_name=self.args.collection_name,
+                    vectors_config=VectorParams(
+                        size=vector_size, distance=Distance.COSINE
+                    ),
+                )
+                loader = DirectoryLoader(
+                    self.args.docs_directory,
+                    glob="**/*.pdf",
+                    show_progress=True,
+                    loader_cls=PyMuPDFLoader,
+                )
+                documents = loader.load()
+                uuids = [str(uuid4()) for _ in range(len(documents))]
+                vector_store = QdrantVectorStore(
+                    client=self.client,
+                    collection_name=self.args.collection_name,
+                    embedding=self.embeddings,
+                )
+                vector_store.add_documents(documents=documents, ids=uuids)
+            return QdrantVectorStore(
                 client=self.client,
                 collection_name=self.args.collection_name,
                 embedding=self.embeddings,
             )
-            vector_store.add_documents(documents=documents, ids=uuids)
-        return QdrantVectorStore(
-            client=self.client,
-            collection_name=self.args.collection_name,
-            embedding=self.embeddings,
-        )
+        except Exception as e:
+            logger.error(f"Error setting up vector store: {e}")
 
     def initialize_llm(self):
         return ChatOpenAI(
@@ -158,10 +186,14 @@ class SymbiontCLI:
             ),
             input_variables=["context", "question"],
         )
+
+        if vectorstores is None:
+            raise ValueError("VectorStores not found")
+
         return RetrievalQA.from_chain_type(
             llm=self.llm,
             chain_type="stuff",
-            retriever=self.vector_store.as_retriever(),
+            retriever=self.vector_store,
             verbose=True,
             chain_type_kwargs={"prompt": custom_prompt},
         )
