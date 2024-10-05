@@ -17,7 +17,11 @@ from dotenv import load_dotenv
 from pydantic import SecretStr
 from langchain.callbacks import get_openai_callback
 from langchain_voyageai import VoyageAIEmbeddings
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+from langchain.retrievers.document_compressors import CrossEncoderReranker
 
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain_cohere import CohereRerank
 
 # Initialize colorama
 init(autoreset=True)
@@ -43,6 +47,22 @@ handler = ColorHandler()
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+
+os.environ["COHERE_API_KEY"] = "Uxs5yOSpf9BN2Wamt0qn3uOIKYaGyMhmNDvdcYnO"
+
+
+def init_reranker():
+    if os.environ.get("COHERE_API_KEY") != "":
+        logger.info("Using Cohere Reranker")
+        return CohereRerank(model="rerank-english-v3.0", top_n=10)
+    else:
+        logger.info("Using HuggingFace CrossEncoder Reranker")
+
+        # model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
+        # return CrossEncoderReranker(model=model, top_n=10)
+
+
+compressor = init_reranker()
 
 
 class SymbiontCLI:
@@ -100,6 +120,9 @@ class SymbiontCLI:
             raise ValueError(f"Directory {args.docs_directory} does not exist")
         return args
 
+    def __remove_next_line(self, text):
+        return text.replace("\n", " ")
+
     def initialize_embeddings(self):
         if os.environ.get("EMBEDDINGS_MODEL", "").lower() == "openai":
             if "OPENAI_API_KEY" in os.environ:
@@ -120,10 +143,8 @@ class SymbiontCLI:
         )
 
     def setup_vector_store(self):
-        try:
-            if not self.client.collection_exists(
-                collection_name=self.args.collection_name
-            ):
+        if not self.client.collection_exists(collection_name=self.args.collection_name):
+            try:
                 logger.info("Creating collection...")
                 vector_size = None
                 if isinstance(self.embeddings, HuggingFaceEmbeddings):
@@ -145,22 +166,28 @@ class SymbiontCLI:
                     glob="**/*.pdf",
                     show_progress=True,
                     loader_cls=PyMuPDFLoader,
+                    silent_errors=True,
                 )
+
                 documents = loader.load()
+
                 uuids = [str(uuid4()) for _ in range(len(documents))]
+
                 vector_store = QdrantVectorStore(
                     client=self.client,
                     collection_name=self.args.collection_name,
                     embedding=self.embeddings,
                 )
+
                 vector_store.add_documents(documents=documents, ids=uuids)
-            return QdrantVectorStore(
-                client=self.client,
-                collection_name=self.args.collection_name,
-                embedding=self.embeddings,
-            )
-        except Exception as e:
-            logger.error(f"Error setting up vector store: {e}")
+            except Exception as e:
+                logger.error(f"Error adding documents: {e}")
+
+        return QdrantVectorStore(
+            client=self.client,
+            collection_name=self.args.collection_name,
+            embedding=self.embeddings,
+        )
 
     def initialize_llm(self):
         return ChatOpenAI(
@@ -193,13 +220,10 @@ class SymbiontCLI:
         return RetrievalQA.from_chain_type(
             llm=self.llm,
             chain_type="stuff",
-            retriever=self.vector_store,
+            retriever=self.vector_store.as_retriever(),
             verbose=True,
             chain_type_kwargs={"prompt": custom_prompt},
         )
-
-    def __remove_next_line(self, text):
-        return text.replace("\n", " ")
 
     def print_search_results(self, results):
         for doc in results:
@@ -213,8 +237,14 @@ class SymbiontCLI:
 
     def perform_search_and_qa(self, query):
         try:
-            results = self.vector_store.similarity_search(query, k=self.args.k_value)
-            self.print_search_results(results)
+            # results = self.vector_store.similarity_search(query, k=self.args.k_value)
+
+            compression_retriever = ContextualCompressionRetriever(
+                base_compressor=compressor,
+                base_retriever=self.vector_store.as_retriever(search_kwargs={"k": 50}),
+            )
+            results = compression_retriever.invoke(query)
+            self.print_search_results(results[::-1])
             if self.args.llm_response.lower() == "no":
                 return
             with get_openai_callback() as cb:
