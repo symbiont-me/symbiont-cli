@@ -22,7 +22,9 @@ from langchain.retrievers.document_compressors import CrossEncoderReranker
 
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_cohere import CohereRerank
+from tqdm import tqdm
 
+load_dotenv()
 # Initialize colorama
 init(autoreset=True)
 
@@ -65,11 +67,26 @@ def init_reranker():
 compressor = init_reranker()
 
 
+def init_reranker():
+    if os.environ.get("COHERE_API_KEY") != "":
+        logger.info("Using Cohere Reranker")
+        return CohereRerank(model="rerank-english-v3.0", top_n=10)
+    else:
+        logger.info("Using HuggingFace CrossEncoder Reranker")
+
+        # model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
+        # return CrossEncoderReranker(model=model, top_n=10)
+
+
+compressor = init_reranker()
+
+
 class SymbiontCLI:
     def __init__(self):
         load_dotenv()
         self.api_key = os.environ.get("OPENAI_API_KEY")
-        self.llm_name = os.environ.get("LLM_NAME", "gpt-3.5-turbo")
+        self.llm_name = "gpt-4o"
+        logger.critical(f"Using LLM: {self.llm_name}")
         if not self.api_key:
             raise ValueError("Please set the OPENAI_API_KEY environment variable")
         self.embeddings = self.initialize_embeddings()
@@ -178,8 +195,11 @@ class SymbiontCLI:
                     collection_name=self.args.collection_name,
                     embedding=self.embeddings,
                 )
+                with tqdm(total=len(documents), desc="Adding documents") as pbar:
+                    for doc, uuid in zip(documents, uuids):
+                        vector_store.add_documents(documents=[doc], ids=[uuid])
+                        pbar.update(1)
 
-                vector_store.add_documents(documents=documents, ids=uuids)
             except Exception as e:
                 logger.error(f"Error adding documents: {e}")
 
@@ -191,7 +211,7 @@ class SymbiontCLI:
 
     def initialize_llm(self):
         return ChatOpenAI(
-            model=self.llm_name,
+            model="gpt-4o",
             temperature=0.9,
             api_key=SecretStr(self.api_key),
         )
@@ -217,6 +237,7 @@ class SymbiontCLI:
         if vectorstores is None:
             raise ValueError("VectorStores not found")
 
+        logger.critical(self.llm)
         return RetrievalQA.from_chain_type(
             llm=self.llm,
             chain_type="stuff",
