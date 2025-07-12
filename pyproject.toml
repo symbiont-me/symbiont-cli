@@ -26,9 +26,13 @@ langchainhub = "^0.1.21"
 langchain-voyageai = "^0.1.2"
 langchain-cohere = "^0.3.0"
 tqdm = "^4.66.5"
+transformers = "^4.45.1"
+torch = "^2.4.1"
+einops = "^0.8.0"
 
 [tool.poetry.scripts]
 remove_collection = "symbiont_cli.remove_collection:main"
+list_collections = "symbiont_cli.list_collections:main"
 
 [build-system]
 requires = ["poetry-core"]

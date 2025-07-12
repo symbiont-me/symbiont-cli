@@ -18,3 +18,9 @@ venv/
 qdrant_storage/
 data/
 *.pdf
+
+
+
+docs/
+logs/
+search_results/
