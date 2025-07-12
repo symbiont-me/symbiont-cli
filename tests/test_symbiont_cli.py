@@ -1,16 +1,16 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from symbiont_cli.qdrant import SymbiontCLI
+from symbiont_cli.main import SymbiontCLI
 
 
 @pytest.fixture
 def mock_dependencies():
-    with patch("symbiont_cli.qdrant.QdrantClient") as MockQdrantClient, patch(
-        "symbiont_cli.qdrant.DirectoryLoader"
+    with patch("symbiont_cli.main.QdrantClient") as MockQdrantClient, patch(
+        "symbiont_cli.main.DirectoryLoader"
     ) as MockDirectoryLoader, patch(
-        "symbiont_cli.qdrant.OpenAIEmbeddings"
+        "symbiont_cli.main.OpenAIEmbeddings"
     ) as MockOpenAIEmbeddings, patch(
-        "symbiont_cli.qdrant.ChatOpenAI"
+        "symbiont_cli.main.ChatOpenAI"
     ) as MockChatOpenAI:
         mock_client = MockQdrantClient.return_value
         mock_loader = MockDirectoryLoader.return_value

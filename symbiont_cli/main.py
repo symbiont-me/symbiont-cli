@@ -338,6 +338,15 @@ class SymbiontCLI:
                 break
             self.perform_search_and_qa(query)
 
+    def process_single_question(self, question):
+        """Process a single question and return the response"""
+        try:
+            logger.info(f"Processing question: '{question}'")
+            self.perform_search_and_qa(question)
+        except Exception as e:
+            logger.error(f"Error processing question: {e}")
+            raise
+
     def run(self):
         try:
             if self.q_list:

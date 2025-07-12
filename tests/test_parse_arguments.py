@@ -1,5 +1,5 @@
 import pytest
-from symbiont_cli.qdrant import SymbiontCLI
+from symbiont_cli.main import SymbiontCLI
 import sys
 
 
