@@ -15,6 +15,7 @@ SymbiontCLI is a powerful command-line interface for processing documents and pe
 - 📊 **Status Monitoring** - Health checks and system diagnostics
 - 👤 **Profile Management** - Multiple configuration profiles
 - ⚡ **Quick Mode** - Resume from last session instantly
+- 📄 **Document Export** - Save results to Word (.docx) and PDF formats
 
 ## 🛠️ Prerequisites
 
@@ -69,6 +70,10 @@ uv run symbiont-cli ask --quick "follow-up question"
 uv run symbiont-cli ask --file questions.txt
 uv run symbiont-cli ask --file data.json --format json
 uv run symbiont-cli ask --file questions.csv --format csv
+
+# Save results to documents
+uv run symbiont-cli ask "research question" --output report.docx
+uv run symbiont-cli ask "analysis query" --output results.pdf
 ```
 
 ### **Interactive Chat**
@@ -81,6 +86,10 @@ uv run symbiont-cli chat --quick
 
 # Batch processing
 uv run symbiont-cli chat docs/papers ai --questions questions.txt
+
+# Save chat session to document
+uv run symbiont-cli chat docs/research economics --output session.docx
+uv run symbiont-cli chat docs/papers --output analysis.pdf
 ```
 
 ### **Collection Management**
@@ -116,6 +125,99 @@ uv run symbiont-cli profiles --use work
 
 # System health check
 uv run symbiont-cli status
+```
+
+## 📄 Document Export Feature
+
+SymbiontCLI can export your query results and AI responses to professional documents for research and sharing purposes.
+
+### **Supported Formats**
+- **Word Documents (.docx)** - Professional reports with formatted sections
+- **PDF Documents (.pdf)** - Clean, printable documents ideal for sharing
+
+### **Usage Examples**
+
+**Single Question with Export:**
+```bash
+# Export to Word document
+uv run symbiont-cli ask "What are the key findings?" -o research-findings.docx
+
+# Export to PDF
+uv run symbiont-cli ask "Summarize the methodology" -o methodology-summary.pdf
+
+# Use with specific collection
+uv run symbiont-cli ask -c economics "What are the trends?" -o economic-trends.docx
+```
+
+**Chat Session Export:**
+```bash
+# Save entire chat session to Word
+uv run symbiont-cli chat docs/research papers -o full-session.docx
+
+# Export interactive session to PDF
+uv run symbiont-cli chat docs/analysis --output analysis-report.pdf
+```
+
+**Batch Processing with Export:**
+```bash
+# Process multiple questions and save to document
+uv run symbiont-cli ask --file questions.txt --batch -o batch-results.docx
+
+# JSON input with PDF export
+uv run symbiont-cli ask --file queries.json --format json -o results.pdf
+```
+
+### **Document Structure**
+
+Generated documents include:
+
+1. **Query Information**
+   - Original question(s)
+   - Collection used
+   - Timestamp
+   - Number of results found
+
+2. **AI Generated Summary**
+   - LLM response (if available)
+   - Processing statistics (tokens used, cost)
+
+3. **Configuration Details**
+   - Models used (LLM, embeddings, reranker)
+   - Settings and parameters
+
+4. **Retrieved Documents**
+   - Source document metadata
+   - Relevance scores
+   - Full content of relevant passages
+   - Document page numbers and titles
+
+### **Tips for Research Use**
+
+**For Academic Research:**
+```bash
+# Create comprehensive research reports
+uv run symbiont-cli ask "What does the literature say about X?" -o literature-review.docx
+
+# Export methodology analysis
+uv run symbiont-cli ask -c papers "Compare methodologies" -o methodology-comparison.pdf
+```
+
+**For Business Analysis:**
+```bash
+# Generate executive summaries
+uv run symbiont-cli ask "Key business insights" -o executive-summary.docx
+
+# Create detailed analysis reports
+uv run symbiont-cli chat docs/reports analysis -o business-analysis.pdf
+```
+
+**For Documentation:**
+```bash
+# Document findings with sources
+uv run symbiont-cli ask --file research-questions.txt -o documented-findings.docx
+
+# Create reference materials
+uv run symbiont-cli ask "Best practices overview" -o best-practices-guide.pdf
 ```
 
 ## ⚙️ Configuration

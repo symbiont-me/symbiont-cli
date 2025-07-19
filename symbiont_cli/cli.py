@@ -162,6 +162,7 @@ def ask(
     input_file: Optional[str] = typer.Option(None, "--file", "-f", help="Read questions from file"),
     input_format: str = typer.Option("text", "--format", help="Input format: text, json, csv, yaml"),
     batch: bool = typer.Option(False, "--batch", "-b", help="Process multiple questions without interaction"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf)"),
 ):
     """
     🔍 Ask questions about your documents with flexible input formats.
@@ -173,6 +174,8 @@ def ask(
         symbiont ask --file questions.csv --format csv             # CSV format
         symbiont ask -c economics "GDP trends"                     # Use specific collection
         symbiont ask -d docs/papers "methodology"                  # Auto-create collection
+        symbiont ask "research question" -o report.docx            # Save to Word document
+        symbiont ask "analysis query" -o results.pdf               # Save to PDF document
     """
     
     # Handle input from file
@@ -266,6 +269,7 @@ def ask(
             llm_response="yes",
             output_directory="search_results",
             q_list=None,
+            output_file=output,
         )
         
         if len(questions_list) == 1:
@@ -348,9 +352,10 @@ def chat(
     collection_name: Optional[str] = typer.Argument(None, help="Collection name (auto-inferred if not provided)"),
     k_value: int = typer.Option(5, "--k", "-k", help="Number of documents to retrieve"),
     llm_response: bool = typer.Option(True, "--llm/--no-llm", help="Use LLM for responses"),
-    output_directory: str = typer.Option("search_results", "--output", "-o", help="Output directory"),
+    output_directory: str = typer.Option("search_results", "--output-dir", help="Output directory"),
     q_list: Optional[str] = typer.Option(None, "--questions", "-q", help="File with questions to process"),
     quick: bool = typer.Option(False, "--quick", help="Use last used collection"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf)"),
 ):
     """
     💬 Chat with your documents using AI.
@@ -359,6 +364,8 @@ def chat(
         symbiont chat docs/papers economics     # Create/use 'economics' collection
         symbiont chat --quick                   # Use last collection
         symbiont chat docs/research             # Auto-name collection from folder
+        symbiont chat docs/papers economics -o session.docx  # Save session to Word
+        symbiont chat docs/research --output results.pdf     # Save session to PDF
     """
     # Handle quick mode - use last collection
     if quick:
@@ -401,6 +408,7 @@ def chat(
             llm_response="yes" if llm_response else "no",
             output_directory=output_directory,
             q_list=q_list,
+            output_file=output,
         )
         cli.run()
     except Exception as e:

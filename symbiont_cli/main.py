@@ -30,6 +30,7 @@ except ImportError:
     CohereRerank = None
 from tqdm import tqdm
 import time
+from .document_generator import DocumentGenerator
 
 load_dotenv()
 # Initialize colorama
@@ -85,6 +86,7 @@ class SymbiontCLI:
         llm_response: str,
         output_directory: str,
         q_list: str | None,
+        output_file: str | None = None,
     ):
         load_dotenv()
         self.config = self.load_config()
@@ -94,6 +96,7 @@ class SymbiontCLI:
         self.llm_response = llm_response
         self.output_directory = output_directory
         self.q_list = q_list
+        self.output_file = output_file
 
         logger.info("Initializing SymbiontCLI...")
         if self.docs_directory and not os.path.isdir(self.docs_directory):
@@ -121,6 +124,7 @@ class SymbiontCLI:
         self.llm = self.initialize_llm()
         self.qa_stuff = self.setup_qa()
         self.compressor = init_reranker(self.config)
+        self.document_generator = DocumentGenerator() if self.output_file else None
         logger.info("SymbiontCLI initialized successfully.")
 
     def load_config(self):
@@ -327,15 +331,42 @@ class SymbiontCLI:
             results = compression_retriever.invoke(query)
             self.print_search_results(results[::-1])
 
+            response = None
+            processing_info = {}
+            
             if self.llm_response.lower() == "no":
                 self.log_search_results_to_file(results, query)
-                return
-            logger.info("Generating response from LLM...")
-            with get_openai_callback() as cb:
-                response = self.qa_stuff.run({"context": self.context, "query": query})
-                logger.critical("\n" + str(cb))
-                logger.info("\n" + response)
-            self.log_search_results_to_file(results, query, response)
+            else:
+                logger.info("Generating response from LLM...")
+                with get_openai_callback() as cb:
+                    response = self.qa_stuff.run({"context": self.context, "query": query})
+                    logger.critical("\n" + str(cb))
+                    logger.info("\n" + response)
+                    
+                    # Store processing info for document generation
+                    processing_info = {
+                        "total_tokens": cb.total_tokens,
+                        "prompt_tokens": cb.prompt_tokens,
+                        "completion_tokens": cb.completion_tokens,
+                        "total_cost": cb.total_cost if hasattr(cb, 'total_cost') else None
+                    }
+                
+                self.log_search_results_to_file(results, query, response)
+            
+            # Generate document if output file is specified
+            if self.output_file and self.document_generator:
+                logger.info(f"Generating document: {self.output_file}")
+                self.document_generator.set_data(
+                    query=query,
+                    collection_name=self.collection_name,
+                    search_results=results,
+                    llm_response=response,
+                    config_info=self.config,
+                    processing_info=processing_info
+                )
+                self.document_generator.generate_document(self.output_file)
+                logger.info(f"Document saved: {self.output_file}")
+                
         except Exception as e:
             logger.error(f"Error during search and QA: {e}")
 
