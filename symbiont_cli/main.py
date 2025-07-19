@@ -14,6 +14,8 @@ from langchain.prompts import PromptTemplate
 from colorama import Fore, Style, init
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from rich.console import Console
+from rich.markdown import Markdown
 from pydantic import SecretStr
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain_voyageai import VoyageAIEmbeddings
@@ -33,8 +35,9 @@ import time
 from .document_generator import DocumentGenerator
 
 load_dotenv()
-# Initialize colorama
+# Initialize colorama and Rich console
 init(autoreset=True)
+console = Console()
 
 
 def filter_metadata(metadata: dict) -> dict:
@@ -367,7 +370,11 @@ class SymbiontCLI:
                 with get_openai_callback() as cb:
                     response = self.qa_stuff.run({"context": self.context, "query": query})
                     logger.critical("\n" + str(cb))
-                    logger.info("\n" + response)
+                    
+                    # Display response with Rich markdown rendering
+                    console.print("\n[bold blue]🤖 AI Response:[/bold blue]")
+                    markdown = Markdown(response)
+                    console.print(markdown)
                     
                     # Store processing info for document generation
                     processing_info = {
