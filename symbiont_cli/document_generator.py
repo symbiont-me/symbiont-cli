@@ -15,6 +15,31 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 
 
+def filter_metadata(metadata: dict) -> dict:
+    """Filter out unnecessary metadata fields for cleaner output"""
+    # Fields to exclude from metadata display
+    excluded_fields = {
+        'producer', 'creator', 'author', 'subject', 'keywords',
+        'creation_date', 'modification_date', 'trapped', 'encrypted'
+    }
+    
+    # Only keep relevant fields
+    relevant_fields = {
+        'source', 'title', 'page', 'relevance_score', 'file_path'
+    }
+    
+    filtered = {}
+    for key, value in metadata.items():
+        # Convert key to lowercase for case-insensitive comparison
+        key_lower = key.lower()
+        
+        # Include if it's a relevant field and not in excluded list
+        if key_lower in relevant_fields or (key_lower not in excluded_fields and key in relevant_fields):
+            filtered[key] = value
+            
+    return filtered
+
+
 class DocumentData:
     """Data structure to hold all information needed for document generation"""
     
@@ -123,12 +148,14 @@ class DocumentGenerator:
                 
                 # Metadata table
                 if result['metadata']:
-                    metadata_table = doc.add_table(rows=len(result['metadata']), cols=2)
-                    metadata_table.style = 'Light Shading'
-                    
-                    for row, (key, value) in enumerate(result['metadata'].items()):
-                        metadata_table.cell(row, 0).text = key.title()
-                        metadata_table.cell(row, 1).text = str(value)
+                    filtered_metadata = filter_metadata(result['metadata'])
+                    if filtered_metadata:
+                        metadata_table = doc.add_table(rows=len(filtered_metadata), cols=2)
+                        metadata_table.style = 'Light Shading'
+                        
+                        for row, (key, value) in enumerate(filtered_metadata.items()):
+                            metadata_table.cell(row, 0).text = key.title()
+                            metadata_table.cell(row, 1).text = str(value)
                 
                 # Content
                 doc.add_paragraph('Content:', style='Heading 3')
@@ -232,19 +259,21 @@ class DocumentGenerator:
                 
                 # Metadata
                 if result['metadata']:
-                    metadata_rows = [[key.title(), str(value)] for key, value in result['metadata'].items()]
-                    metadata_table = Table(metadata_rows, colWidths=[1.5*inch, 4*inch])
-                    metadata_table.setStyle(TableStyle([
-                        ('BACKGROUND', (0, 0), (0, -1), colors.lightblue),
-                        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
-                        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-                        ('FONTSIZE', (0, 0), (-1, -1), 9),
-                        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-                        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-                    ]))
-                    story.append(metadata_table)
-                    story.append(Spacer(1, 10))
+                    filtered_metadata = filter_metadata(result['metadata'])
+                    if filtered_metadata:
+                        metadata_rows = [[key.title(), str(value)] for key, value in filtered_metadata.items()]
+                        metadata_table = Table(metadata_rows, colWidths=[1.5*inch, 4*inch])
+                        metadata_table.setStyle(TableStyle([
+                            ('BACKGROUND', (0, 0), (0, -1), colors.lightblue),
+                            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+                            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+                            ('FONTSIZE', (0, 0), (-1, -1), 9),
+                            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+                        ]))
+                        story.append(metadata_table)
+                        story.append(Spacer(1, 10))
                 
                 # Content
                 story.append(Paragraph("<b>Content:</b>", styles['BodyText']))

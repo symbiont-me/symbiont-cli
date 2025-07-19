@@ -37,6 +37,31 @@ load_dotenv()
 init(autoreset=True)
 
 
+def filter_metadata(metadata: dict) -> dict:
+    """Filter out unnecessary metadata fields for cleaner output"""
+    # Fields to exclude from metadata display
+    excluded_fields = {
+        'producer', 'creator', 'author', 'subject', 'keywords',
+        'creation_date', 'modification_date', 'trapped', 'encrypted'
+    }
+    
+    # Only keep relevant fields
+    relevant_fields = {
+        'source', 'title', 'page', 'relevance_score', 'file_path'
+    }
+    
+    filtered = {}
+    for key, value in metadata.items():
+        # Convert key to lowercase for case-insensitive comparison
+        key_lower = key.lower()
+        
+        # Include if it's a relevant field and not in excluded list
+        if key_lower in relevant_fields or (key_lower not in excluded_fields and key in relevant_fields):
+            filtered[key] = value
+            
+    return filtered
+
+
 class ColorHandler(logging.StreamHandler):
     def emit(self, record):
         color = Fore.WHITE
@@ -302,10 +327,10 @@ class SymbiontCLI:
             f.write("\n" + "=" * 40 + "\n")
             for doc in results:
                 f.write("Document Metadata:\n")
-                f.write(f"Source: {doc.metadata['source']}, ")
-                f.write(f"Title: {doc.metadata['title']}, ")
-                f.write(f"Page: {doc.metadata['page']} ")
-                f.write(f"Relevance: {doc.metadata.get('relevance_score', 'N/A')}\n")
+                filtered_metadata = filter_metadata(doc.metadata)
+                for key, value in filtered_metadata.items():
+                    f.write(f"{key}: {value}, ")
+                f.write("\n")
                 # f.write("\n" + self.__remove_next_line(doc.page_content) + "\n")
                 f.write("\n" + "=" * 40 + "\n")
 
@@ -313,7 +338,8 @@ class SymbiontCLI:
         for doc in results:
             self.context += self.__remove_next_line(doc.page_content) + " "
             logger.info("Document Metadata:")
-            for key, value in doc.metadata.items():
+            filtered_metadata = filter_metadata(doc.metadata)
+            for key, value in filtered_metadata.items():
                 logger.info(f"  {key}: {value}")
             logger.info("Page Content:")
             logger.info("\n" + self.__remove_next_line(doc.page_content))
