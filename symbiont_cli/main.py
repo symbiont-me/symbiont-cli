@@ -8,21 +8,26 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
 from langchain_community.document_loaders import DirectoryLoader, PyMuPDFLoader
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from colorama import Fore, Style, init
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pydantic import SecretStr
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 from langchain_voyageai import VoyageAIEmbeddings
 from langchain_community.embeddings import JinaEmbeddings
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 
 from langchain.retrievers import ContextualCompressionRetriever
-from langchain_cohere import CohereRerank
+try:
+    from langchain_cohere import CohereRerank
+    COHERE_AVAILABLE = True
+except ImportError:
+    COHERE_AVAILABLE = False
+    CohereRerank = None
 from tqdm import tqdm
 import time
 
@@ -58,9 +63,14 @@ load_dotenv()
 def init_reranker(config):
     reranker_choice = config.get("reranker", {}).get("reranker", "huggingface")
     if reranker_choice == "cohere":
-        logger.info("Using Cohere Reranker")
-        return CohereRerank(model="rerank-english-v3.0", top_n=10)
-    elif reranker_choice == "huggingface":
+        if COHERE_AVAILABLE:
+            logger.info("Using Cohere Reranker")
+            return CohereRerank(model="rerank-english-v3.0", top_n=10)
+        else:
+            logger.warning("Cohere reranker requested but not available. Falling back to HuggingFace.")
+            reranker_choice = "huggingface"
+    
+    if reranker_choice == "huggingface":
         logger.info("Using HuggingFace CrossEncoder Reranker")
         model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-base")
         return CrossEncoderReranker(model=model, top_n=10)
@@ -86,7 +96,7 @@ class SymbiontCLI:
         self.q_list = q_list
 
         logger.info("Initializing SymbiontCLI...")
-        if not os.path.isdir(self.docs_directory):
+        if self.docs_directory and not os.path.isdir(self.docs_directory):
             logger.error(f"Directory not found: {self.docs_directory}")
             raise ValueError(f"Directory {self.docs_directory} does not exist")
 
@@ -163,6 +173,10 @@ class SymbiontCLI:
     def setup_vector_store(self):
         logger.info(f"Setting up vector store for collection: {self.collection_name}")
         if not self.client.collection_exists(collection_name=self.collection_name):
+            if not self.docs_directory:
+                logger.error(f"Collection '{self.collection_name}' does not exist and no documents directory provided.")
+                raise ValueError(f"Collection {self.collection_name} does not exist. Please provide a documents directory to create it.")
+            
             try:
                 logger.info(f"Collection '{self.collection_name}' does not exist. Creating new collection...")
                 vector_size = self.get_vector_size()
@@ -207,6 +221,8 @@ class SymbiontCLI:
             except Exception as e:
                 logger.error(f"Error creating collection: {e}")
                 raise
+        else:
+            logger.info(f"Using existing collection: {self.collection_name}")
 
         return QdrantVectorStore(
             client=self.client,
