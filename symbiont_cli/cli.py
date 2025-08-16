@@ -204,6 +204,25 @@ def ask(
     elif docs and not collection:
         collection = Path(docs).name.lower().replace(" ", "-")
         console.print(f"[blue]Auto-detected collection: {collection}[/blue]")
+    elif collection and not docs:
+        # Collection specified but no docs - check if collection exists
+        try:
+            config = load_config()
+            client = QdrantClient(
+                host=config.get("qdrant", {}).get("host", "localhost"),
+                port=config.get("qdrant", {}).get("port", 6333),
+            )
+            collections = [c.name for c in client.get_collections().collections]
+            if collection not in collections:
+                console.print(f"[red]Collection '{collection}' not found.[/red]")
+                console.print(f"[yellow]Available collections: {', '.join(collections)}[/yellow]")
+                raise typer.Exit(1)
+            console.print(f"[blue]Using existing collection: {collection}[/blue]")
+            # Set docs to None for existing collections
+            docs = None
+        except Exception as e:
+            console.print(f"[red]Error checking collection: {e}[/red]")
+            raise typer.Exit(1)
     elif not docs and not collection:
         last_config = load_last_config()
         if last_config:
