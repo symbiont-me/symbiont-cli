@@ -18,3 +18,36 @@ venv/
 qdrant_storage/
 data/
 *.pdf
+
+# Personal content and sensitive information
+logs/
+search_results/
+symbiont_cli/logs/
+symbiont_cli/symbiont_cli/logs/
+symbiont_cli/vector_data/
+
+# Cache and temporary files
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
