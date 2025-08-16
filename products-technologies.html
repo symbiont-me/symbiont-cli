@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Query Results</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #27ae60;
+            margin-top: 25px;
+        }
+        .query-info {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+        .query-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .query-info td {
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+        }
+        .query-info td:first-child {
+            background-color: #d5dbdb;
+            font-weight: bold;
+            width: 150px;
+        }
+        .llm-response {
+            background-color: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            font-style: italic;
+        }
+        .config-section {
+            background-color: #fdf2e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .config-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .document {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .document-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .document-content {
+            padding: 20px;
+        }
+        .metadata-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .metadata-table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+        .metadata-table td:first-child {
+            background-color: #e3f2fd;
+            font-weight: bold;
+            width: 150px;
+        }
+        .content-section {
+            background-color: #fafafa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 3px solid #95a5a6;
+        }
+        .content-text {
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        .timestamp {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        .relevance-score {
+            background-color: #f39c12;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Research Query Results</h1>
+        
+        <div class="query-info">
+            <table>
+                <tr>
+                    <td>Query:</td>
+                    <td>what were the primary manufactured products and what were the technologies used during the industrial revolution period?</td>
+                </tr>
+                <tr>
+                    <td>Collection:</td>
+                    <td>19-c-britain</td>
+                </tr>
+                <tr>
+                    <td>Generated:</td>
+                    <td>2025-07-19 12:31:15</td>
+                </tr>
+                <tr>
+                    <td>Results Found:</td>
+                    <td>10</td>
+                </tr>
+            </table>
+        </div>
+        <h2>AI Generated Summary</h2>
+        <div class="llm-response">
+            During the Industrial Revolution, which began in the late 18th century and extended into the 19th century, a wide array of manufactured products emerged, driven by significant technological advancements. Here are some primary manufactured products and the corresponding technologies used during this period:
+
+1. **Textiles**: The textile industry was central to the Industrial Revolution. Key technological advancements included:
+   - The **Spinning Jenny**, invented by James Hargreaves, which allowed a single worker to spin multiple spools of thread simultaneously.
+   - The **Water Frame**, developed by Richard Arkwright, used water power to drive textile machinery, leading to increased production.
+   - The **Power Loom**, invented by Edmund Cartwright, mechanized the process of weaving cloth.
+
+2. **Iron and Steel**: The production of iron and steel was revolutionized by new technologies:
+   - The **Blast Furnace** for smelting iron became more efficient, driven by improvements such as the use of coke instead of charcoal.
+   - Henry Bessemer&#x27;s **Bessemer Process** dramatically reduced the cost and increased the output of steel, an essential material for building infrastructure and machinery.
+
+3. **Coal Mining**: Coal was a critical energy source, and its extraction was facilitated by:
+   - The development of **Steam Engines**, first improved by James Watt, which powered pumps to remove water from mines, allowing deeper mining.
+
+4. **Transportation**:
+   - The **Steam Locomotive**, developed by George Stephenson and others, revolutionized land transport, facilitating the movement of goods and people.
+   - The construction of **railroads** expanded rapidly, made possible by advancements in iron and steel.
+
+5. **Agriculture**: Although not an industrial product per se, agricultural productivity increased significantly through mechanization, which supported industrial growth by freeing labor:
+   - Innovations like Jethro Tull&#x27;s **Seed Drill** and later, mechanical reapers and threshers, boosted farm output.
+
+6. **Steam Power**: Beyond mining, steam engines found applications in various industries, becoming a versatile power source for factories and transportation.
+
+7. **Glass and Chemical Products**:
+   - Advances in chemistry during the Industrial Revolution led to the production of a variety of chemicals and glass products, utilizing new processes and fuels.
+
+The Industrial Revolution marked a shift from manual labor and artisanal production to machine-based manufacturing, which made goods more abundant and affordable, subsequently transforming economies and societies around the world.
+        </div>
+        <h2>Configuration</h2>
+        <div class="config-section"><h3>General</h3><ul><li><strong>llm_name:</strong> gpt-4o</li></ul><h3>Embeddings</h3><ul><li><strong>model:</strong> huggingface</li></ul><h3>Reranker</h3><ul><li><strong>reranker:</strong> huggingface</li></ul><h3>Qdrant</h3><ul><li><strong>host:</strong> localhost</li><li><strong>port:</strong> 6333</li></ul></div>
+        <h2>Retrieved Documents</h2>
+        <div class="document">
+            <div class="document-header">
+                Document 1
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>152</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">Industrialisation and technological change
+133
+prosaic industries we have mentioned above were not merely adjuncts to
+industrialisation but leaders of it, and in fact were key bearers of tech-
+nological change during the industrial revolution.
+Glass manufacture
+Glass is an important and differentiated industrial product, widely used
+across the early industrial economy and central to the development of in-
+dustrialisation. Glass comprises both domestic products (bottles, glasses,
+lamps, mirrors, etc.) and important industrial inputs: containers, sheet
+glass and cast plate glass (of widely differing types, usually used for win-
+dows), and a complex specialised product, namely optical glass. As with
+the food industry, the rate and impact of technological change is sub-
+ject to differences in interpretation. Derry and Williams suggested that
+the transformation of glass making into a machine industry was a slow
+process: ‘It was, indeed, far from complete even in 1900 . . . in glassmak-
+ing the craftsman and the ancient, and often secret, traditional processes
+were not quickly swept aside by industrial change’ (1979: 583, 592). Yet, re-
+viewing the eighteenth century, Berg was able to conclude that the glass
+industry ‘experienced major technological or organisational changes in
+the period [1700–1820]’ (Berg 1994: 53). These views are not necessarily
+contradictory – although many hand processes remained, the period none
+the less also saw sustained innovation.
+Glass was one of the few large-scale production activities in early in-
+dustrialisation, along with textiles and iron manufacture (Mathias 1983:
+185). It was a sector of steady innovation. In the seventeenth century an
+important innovation, the reverbatory furnace, had emerged; its basic
+principle was the separation of fuel and raw material, and this made
+possible the substitution of coal for wood and charcoal as a fuel (Landes
+1969: 53–4; Mokyr 1990: 106; Timmins 1998: 43). In the late eighteenth
+century the production of plate glass was revived in Britain (where it had
+been produced on a small scale in the seventeenth and early eighteenth
+centuries) with the construction of a very large plant at Ravenhead, near
+St Helens, by the British Plate Glass Company (Timmins 1998: 109). In the
+1830s cylinder processes were introduced for the manufacture of sheet
+glass, and in the 1840s machinery for grinding and polishing sheet glass
+was developed and diffused (Singer 1958: 367; Daunton 1995: 229). These
+innovations were important in the development of companies that have
+played a major long-term role in British manufacturing: for example, the
+cylinder process was introduced in the 1840s by the St Helens Crown
+Glass company, which became Pilkington Brothers, a ﬁrm that remains a
+major producer and innovator in glass (Timmins 1998: 201). Finally, ‘from
+1859 onwards there was a series of patents in various countries for bottle-
+making machines, and in 1887 the semi-automatic Ashley machine, used
+at Castleford in Yorkshire, provided the ﬁrst commercial success’ (Derry
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 2
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>139</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">120
+Kristine Bruland
+and this is one key area where discussions of the industrial revolution
+have contemporary resonance. Indeed it is quite common to see contem-
+porary policy documents stressing the importance of innovation in infor-
+mation technology and biotechnology by referring directly to accounts
+of the role of steam power and machinery in the industrial revolution.
+If, however, much wider processes of change determine output and pro-
+ductivity growth, then we have before us important issues of principle in
+understanding productivity growth and indeed overall economic growth
+during the period.
+COMPETING VIEWS OF INNOVATION
+AND INDUSTRIALISATION
+In 1815 Patrick Colquhoun wrote that ‘It is impossible to contemplate
+the progress of manufactures in Great Britain within the last thirty years
+without wonder and astonishment. Its rapidity, particularly since the
+commencement of the French revolutionary war, exceeds all credibility.
+The improvement of steam engines, but above all the facilities afforded to
+the great branches of the woollen and cotton manufactories by ingenious
+machinery, invigorated by capital and skill, are beyond all calculation’
+(Colquhoun 1815: 68). This view of the relation between technology and
+manufacturing growth was not uncommon: it focused on a number of
+highly visible techniques that began to be implemented from the later
+eighteenth century. Foremost among these were steam engines, cotton
+spinning machines, and metal working devices and products. These tech-
+niques were often associated with speciﬁc industries or activities, and it
+was a short and apparently natural step to link the techniques with the
+expansion of the industries concerned, and then see these industries as
+the driving forces of economic growth.
+This kind of vision of the technology–industrialisation–growth link be-
+gan with the ﬁrst systematic work on the industrial revolution, Arnold
+Toynbee’s Lectures on the industrial revolution of the Eighteenth Century.
+Toynbee (1969 [1884]) focused on ﬁve technologies, and argued that it was
+the intersection of these technologies and the emergence of free-market
+capitalism as described by Adam Smith that constituted the industrial
+revolution. The key technologies were the Watt steam engine and the
+‘four great inventions’ which revolutionised the cotton textile industry
+between 1730 and 1830 – the spinning jenny, the water-frame, Crompton’s
+mule and the automatic mule of Richard Roberts. Toynbee’s work had
+a major impact on subsequent economic history, with its technological
+emphases being repeated in Paul Mantoux’s classic Industrial Revolution in
+the Eighteenth Century, and in a wide range of later works up to and in-
+cluding Landes’s Unbound Prometheus, which remains the main work on
+technological development in western Europe. Mantoux focused Part II
+of his work, ‘Inventions and Factories’, on exactly the same sequence of
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 3
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>34</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">Accounting for the Industrial Revolution
+15
+mapped successfully onto an object, a substance or an action. The ‘mind’
+part is especially crucial. The intellectual foundations of the technology
+which made the Industrial Revolution came out of the Enlightenment,
+the scientiﬁc advances of the seventeenth and eighteenth centuries, the
+Renaissance, the Reformation and the printing press. These were all pan-
+European phenomena, and while Britain was an active participant and
+then became a leader, the reasons for its position were in a different class
+from those that explain the deeper historical roots of the phenomenon
+altogether.
+Second, what made the Industrial Revolution such a watershed phe-
+nomenon was not just the dramatic inventions of Watt, Smeaton,
+Harrison, Cort and Crompton during the years of Sturm und Drang (approx-
+imately 1760–1800). Dramatic inventions before the Industrial Revolution
+were not unknown in Europe or elsewhere. Some of these breakthroughs
+undeniably had an effect on growth, such as the invention of the spin-
+ning wheel and the horizontal loom in the twelfth century, or that of
+the blast furnace and navigational and shipbuilding technology in the
+ﬁfteenth. The increased industrial use of coal as a source of heat for
+industry and improvements in agricultural productivity (in part owing
+to investment in land improvements and livestock rather than techno-
+logical change) did lead to higher income per capita and the ability to
+sustain a larger population on a given resource base (Wrigley 2000). But
+none of these ‘episodes’ resulted in sustainable per capita growth, even
+if each time they ratcheted living standards up to a higher level. Each
+of these episodes created a negative feedback effect that eventually elim-
+inated growth. Identifying such feedback effects in earlier periods, and
+then checking whether they may have weakened or even turned positive
+may provide a better understanding of what happened.
+The critical period in which West and East diverged may thus have
+been not the classical years of the Industrial Revolution but the decades
+that followed. Attention may have been diverted away from post-1815 de-
+velopments by the spectacular inventions of the annus mirabilis as Donald
+Cardwell (1972) has termed the year 1769. In other words, what made
+the Industrial Revolution into the ‘great divergence’ was the persistence
+of technological change after the ﬁrst wave. To see this, we might well
+imagine a counterfactual steady state of throstles, wrought iron and sta-
+tionary steam engines, in which there would have been a one-off shift
+from wool to cotton and from animate power to stationary engines. But
+this is not what happened: the true miracle is not that the classical In-
+dustrial Revolution happened, but that it did not peter out like so many
+earlier waves of innovation. It was followed after 1820 by a secondary
+ripple of inventions that may have been less spectacular, but these were
+the ones that provided the muscle to the downward trend in production
+costs, spread the application to new and more industries and sectors, and
+eventually showed up in the productivity statistics.
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 4
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>136</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">5
+Industrialisation and
+technological change
+KRISTINE BRUL AND
+Contents
+Introduction
+117
+Competing views of innovation and industrialisation
+120
+Sectoral patterns of technological advance: the
+patenting evidence
+122
+Sectoral patterns of change: technological histories
+126
+Agriculture
+126
+Food and food processing
+129
+Glass manufacture
+133
+The ‘major innovations’
+135
+Textiles
+135
+Steam power
+142
+Conclusion: Interpreting the pattern of technological
+change
+145
+INTRODUCTION
+Technological change was a central component in the industrialisation
+process of the late eighteenth and early nineteenth centuries, and thus in
+the making of the modern world economy. Nevertheless, more than two
+centuries after the beginnings of industrialisation, our understanding
+of the factors that impelled and shaped the development, diffusion and
+impact of the new technologies of early industrialisation remains far from
+complete. As a consequence, important questions concerning the place
+and interpretation of technological change in industrialisation remain
+unresolved.
+The idea that we know relatively little about the sources and outcomes
+of innovation in the industrial revolution may seem strange, since there
+is a large historical literature organised explicitly or implicitly around
+the idea that technological change and industrialisation are intimately
+linked. Indeed there are many writers for whom new technologies are
+industrialisation, and so the emergence of new techniques is implicitly
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 5
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>161</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">142
+Kristine Bruland
+It was one sector among many that were innovating at that time, and
+it was far from being the only sector to generate sustained productivity
+growth.
+Steam power
+The ‘critical technologies’ approach to British industrial growth ascribes
+the expansion to the effects of the deployment of new techniques as the
+primary agent of economic advance, and its strongest version is written
+around the steam engine: ‘If we were to try to single out the crucial in-
+ventions which made the industrial revolution possible and ensured a
+continuous process of industrialisation and technical change, and hence
+sustained economic growth, it seems that the choice would fall on the
+steam engine on one hand, and on the other Cort’s puddling process
+which made a cheap and acceptable British malleable iron’ (Deane 1965:
+130). As I have argued above, this type of approach has a long history
+stretching back at least to the ﬁrst systematic use of the term ‘industrial
+revolution’ in the work of Arnold Toynbee. However the strong emphasis
+on the primacy of steam power among the technologies of industrialisa-
+tion goes back much further, into the nineteenth century itself. A classic
+statement of the alleged beneﬁts of steam was made by Andrew Ure, writ-
+ing in 1835. It is worth quoting this at some length, since the structure of
+the argument has been very important over the years, and continues to
+be reﬂected in the advocates of ‘critical technology’-based growth theories
+even today:
+There are many engines made by Boulton and Watt, forty years ago, which
+have continued in constant work all that time with very slight repairs. What a
+multitude of valuable horses would have been worn out in doing the service of
+these machines! And what a vast quantity of grain they would have consumed!
+Had British industry not been aided by Watt’s invention it must have done with
+a retarding pace in consequence of the increasing cost of motive power, and
+would, long ere now, have experienced in the price of horses, and scarcity of
+waterfalls, an insurmountable barrier to further advancement, could horses,
+even at the low prices to which their rival, steam, has kept them, be employed
+to drive a cotton mill at the present day, they would devour all the proﬁts of
+the manufacturer.
+Steam engines furnish the means not only of their support but also of their
+multiplication. They create a vast demand for fuel; and while they lend their
+powerful arms to drain the pits and raise the coals, they call into employment
+multitudes of miners, engineers, shipbuilders and sailors, and cause the con-
+struction of canals and railways; and while they enable these rich ﬁelds of
+industry to be cultivated to the utmost, they leave thousands of ﬁne arable
+ﬁelds free for the production of food to man, which must otherwise have
+been allotted to the food of horses. Steam engines, moreover, by the cheapness
+and steadiness of their action, fabricate cheap goods, and procure in their ex-
+change a liberal supply of the necessaries and comforts of life, produced in
+foreign lands.
+(Ure, cited in Morgan 1999: 107)
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 6
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>206</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">Trade: discovery, mercantilism and technology
+187
+century Britain produced some two-thirds of the world’s output of ‘new
+technology’ products. During this period, the exports of textiles and other
+goods cheapened by Britain’s new industrial technology (aggregated at,
+say, 1800 prices) grew much faster than either ‘real’ national income or
+‘real’ industrial production aggregated at the same prices.
+The growth of exports was not conﬁned to the goods of the famous
+industries of the industrial revolution. Some have suggested that this
+should be taken as evidence to support an older view of the industrial
+revolution, which sees technological change cheapening British industrial
+goods generally, and to challenge the recent view that sees technological
+change largely conﬁned to the famous industries (Temin 1997). However,
+the expansion of trade is consistent with the recent view of localised
+technological change. British population grew very rapidly, creating an
+expanding demand for imported food. The famous industries’ large ex-
+ports were driven by falling prices and so they earned much less from
+overseas than the expansion of the volume of their exports would seem
+to indicate. Furthermore, cotton required massive imports of raw mate-
+rials. As a result, exports of other traditionally exporting industries also
+expanded to help to ﬁnance growing import demand (Harley and Crafts
+2000).
+REPEAL OF THE CORN L AWS
+In the middle of the nineteenth century the politics of trade shifted
+as Britain led the dismantling of the restrictions of eighteenth-century
+mercantilism. The repeal of the corn laws in 1846 was the great symbol.
+Britain’s political consensus shifted radically from supporting a trade
+policy of protecting vital interests – particularly the landed interest and
+those of East and West Indian traders – to a commitment to free trade.
+Repeal of the corn laws presents something of a paradox. It radically
+changed the politics of tariffs, but actually tariffs fell only slightly and
+the ratio of tariff revenue to the value of imports actually remained
+higher than in France until the 1870s (Nye 1991; Irwin 1993). None the
+less, ‘free trade’ – which meant foreswearing the use of tariffs to pro-
+tect domestic interests although retaining some for revenue – took on a
+near constitutional status in Britain that removed the possibility of pro-
+tective tariffs from usual political discussion. Britain’s leaders changed
+policy in response to various forces: industrialisation and urbanisation al-
+tered British society; growing population, both in Britain and elsewhere,
+changed the economics of the grain market (Fairlie 1965, 1969); the Re-
+form Act of 1832 altered the politics; agitation outside of parliament
+became more effective; economic crises demanded action from the ad-
+ministration.
+Eighteenth-century mercantilism was a complicated amalgam of ideas
+and policies. The Acts of Navigation, tariffs, bounties and prohibitions
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 7
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>65</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">46
+Pat Hudson
+artisan or putting-out context. But this could be a strength as much
+as a weakness. Rapid innovation often occurred through collective and
+co-operative forms of invention in environments where knowledge was
+freely available.
+Innovations were vital, from the introduction of new production tech-
+nologies and ways of organising, employing and paying labour to inno-
+vations in design, products, salesmanship and marketing. Continuous
+adaptation was very important in both technological and organisation
+innovation and this was stimulated by on-the-job responses to problems
+and opportunities rather than by managerial training, formal science,
+patents or secrecy. Large ﬁrms and plants had no necessary advantage in
+this process. Such incremental innovations were usually not novel in the
+legal sense and therefore not patentable: they were a by-product of day-
+to-day operations where the processes of invention and innovation were
+fused (see chapter 5 below). Even in sectors like textiles, steam turbines
+and civil engineering, characterised by signiﬁcant and patented macro-
+inventions, smaller innovations which turned the major inventions into
+workable and efﬁcient machines for use in a variety of regional and
+local contexts played a key role. These were often promoted by collective
+effort and a culture of sharing between communities of entrepreneurs
+or artisans, rather than by secrecy. Technical experts in many ﬁelds
+often released data to consolidate their reputations and this frequently
+developed into a professional ethos of disclosure and the sharing of ex-
+periences (MacLeod 1988).
+It would have been costly to keep incremental technical changes secret,
+and in fact there was often a relatively free exchange of information
+between ﬁrms during the industrial revolution about everything from
+markets and fashion to new techniques and plant design. The frequently
+close geographical proximity of ﬁrms and of specialised suppliers of tools,
+machinery and equipment was conducive to the transfer of knowledge
+about mechanical improvements. In west Yorkshire, for example, there
+was a continuous circulation of textile manufacturers and engineering
+workers: in each others’ premises, at markets, trading, chasing debts,
+socialising, all of which provided opportunities to learn and to borrow
+ideas (Cookson 1997). Firms could often gain from releasing information
+because they would share in the success of the entire sector, community
+or region. Larger blast furnaces in Cleveland in the 1870s, for example,
+increased the value of local ore deposits, which were owned by the manu-
+facturers, as well as giving considerable advantage to iron ﬁrms located in
+the region. The increasing height of blast furnaces in the mid-nineteenth
+century was a response to freely available technical information about
+the fuel consumption and performance of different sizes of furnace and
+with different sorts of ores. The technology of capping the blast furnace
+so that waste gases could be used for fuel was also collectively invented
+(Allen 1983). Spreading the costs and risks amongst ﬁrms yielded high
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 8
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>165</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">146
+Kristine Bruland
+basic growth dynamic of what was already a large and complex economy.
+While those who support these arguments often criticise the attempts
+to quantify the impacts of critical technologies (see for example Freeman
+and Louca 2001: 31–5), the proponents of the critical technologies argu-
+ments in general offer little evidence concerning the economic impacts of
+steam, railways and so on. Conceptual arguments as to precisely how the
+radical technological breakthroughs in textile machinery, steam power
+and the like fed through into economic outcomes are often absent, as is
+any form of quantitative evidence linking the industry concerned to the
+wider economy.
+The alternative that has been explored here is that innovation was a
+broad process, pervasively embedded in many industries, even those that
+were essentially matters of hand technology. Samuel argued, in a chaotic
+but fascinating paper, that ‘in speaking of the primacy of labour power
+one is referring not to single instances, or to curious survivals, but to
+a dominant pattern of growth’, one that was ‘quite as dynamic as high
+technology industry, and just as much subject to technical development
+and change’ (Samuel 1977: 45, 61). There is in fact a wide array of ev-
+idence from business, technological and industrial histories to lead us
+to the ﬁrm conclusion that innovation in the industrial revolution was
+present across virtually all activities that comprised the British economy
+at that time. Clearing the ground on this issue is important in itself, but
+it also generates much wider questions. If we recognise that technologi-
+cal change during early industrialisation was not a matter just of steam,
+textiles or any other particular heroic breakthrough, but was rather a
+matter of extensive development across a very wide range of technolo-
+gies, then we open up a new array of research issues. The wide scope of
+technological development in Britain after the early eighteenth century
+suggests a general social propensity to innovate. Exploring this propensity
+ought to lead us ﬁrst to an adequate causal account of extensive techno-
+logical change, secondly to a more satisfactory account of the relations
+between the different ﬁelds of technological and economic change, and
+ﬁnally to a better understanding of the economic causes and impacts of
+innovation.
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 9
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 2_ Economic Maturity, 1860–1939 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 2_ Economic Maturity, 1860–1939 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820375pre.tex</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>182</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">Trade, 1870–1939: from globalisation to fragmentation
+163
+-5%
+0%
+5%
+10%
+15%
+20%
+25%
+30%
+1880
+1940
+Property income
+from abroad
+Services
+Foreign investment
+Credits
+Debits
+Exports
+Imports
+1880
+1900
+1920
+1900
+1920
+1940
+Figure 7.1 Balance of
+payments as
+percentage of GNP,
+1870–1939
+Source: Feinstein
+1972: tables 3 and 15.
+The ﬁrst era was that of the industrial revolution and reﬂected British
+technological leadership. British ﬁrms invented new technologies in cot-
+ton and then in other textiles, in iron production and in the development
+of machinery of many types. Costs fell dramatically while the Revolution-
+ary and Napoleonic Wars hindered foreign emulation and lower British
+prices attracted foreign buyers. British ﬁrms maintained their techno-
+logical advantage for much of the century, most strikingly in cotton
+textiles where British ﬁrms continued to dominate international trade
+in 1913. The technology of the industrial revolution dominated Britain’s
+early nineteenth-century trade, but population pressure on domestic agri-
+cultural resources also played an important role (Harley and Crafts 2000).
+In the second era, covering the second half of the nineteenth cen-
+tury, transportation technology and population pressure drove change.
+Iron and steam technology had its greatest impact on railroads and
+steamships and caused dramatic reductions in transportation costs. Pop-
+ulation pressed on limited European resources at the same time as the
+abundant agricultural resources of continental interiors became accessi-
+ble. Together these forces generated an unprecedented growth in inter-
+continental trade in food and raw materials. With lower transportation
+costs, trade could exploit differences in factor endowments. In response,
+transportation networks and settlement expanded into hitherto inacces-
+sible regions. Growing trade required investment which was provided by
+British investors. The growth of trade required the expansion of the in-
+ternational transactions services – such as ﬁnance and insurance – that
+British ﬁrms also provided.
+The great period of globalisation driven by falling transportation costs
+and expanding settlement drew to a close by the early years of the twen-
+tieth century. We can see with hindsight the beginnings of the trade pat-
+tern of the late twentieth century. Today, although trade of manufactured
+goods for raw materials remains important, the bulk of trade consists of
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-header">
+                Document 10
+            </div>
+            <div class="document-content">
+                <table class="metadata-table">
+                    <tr>
+                        <td>Source</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>File_Path</td>
+                        <td>/Users/leviathan/Desktop/19-c-britain/Roderick Floud, Paul Johnson - The Cambridge Economic History of Modern Britain, Volume 1_ Industrialisation, 1700–1860 (2004).pdf</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>0521820367pre_pi-xx</td>
+                    </tr>
+                    <tr>
+                        <td>Page</td>
+                        <td>43</td>
+                    </tr>
+                </table>
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">24
+Joel Mokyr
+more than his inventions, stamps Smeaton without question as one of
+the ‘Vital Few’ of the industrial revolution.
+Pragmatic and experimental knowledge was at the base of many of
+the key inventions of the classical Industrial Revolution. The great in-
+ventions in cotton spinning in the early years of the Industrial Revolu-
+tion were signiﬁcant mechanical advances, but it is hard to argue that
+they depended on any deep scientiﬁc insights or even methodology. If
+they had been all there was to the Industrial Revolution, the scepticism
+about the role of intellectual factors in economic growth would be well
+placed. But what needs to be explained is not so much Arkwright’s and
+Crompton’s famous ‘gadgets’ but their continuous improvement beyond
+their original breakthrough.
+To sum up: accounting for the Industrial Revolution involves an under-
+standing of the changes in the culture and technology of useful knowl-
+edge that had been in the making since at least the era of Bacon and
+Galileo. These changes explain the difference between sustained growth
+and ‘just another’ episode that would have tapered off to the stationary
+state that most political economists of the period still expected.
+Two further examples will illustrate this argument. One is the career
+of the engineer Richard Roberts (Hills 2002). Roberts was far from a sci-
+entist and never had a scientiﬁc education. His invention of the self-actor
+in 1825 is a famous episode in the history of technology since it was
+triggered by a strike of mule-operatives. Roberts, however, was a universal
+mechanical genius with an uncanny ability to access what knowledge was
+available and turn it into new techniques that worked. His application of
+the concept of binary coding of information embodied in the Jacquard
+loom was more immediately useful than the analytical engine of Charles
+Babbage (which was based on the same principle): he perfected a multiple
+spindle machine, which used a Jacquard-type control mechanism for the
+drilling of rivet holes in the wrought iron plates used in the Britannia
+tubular bridge (Rosenberg and Vincenti 1978). Despite his lack of formal
+education, he was well networked, elected to the famous Manchester Lit-
+erary and Philosophical Society in 1823, where he rubbed shoulders with
+leading natural philosophers such as John Dalton and William Henry. In
+1845 he built an electromagnet which won a prize for the most powerful
+of its kind and was placed in the Peel Park museum in Manchester. When
+ﬁrst approached, he responded, characteristically, that he knew nothing
+of the theory or practice of electromagnetism, but that he would try and
+ﬁnd out. By this time, if someone wanted to ‘ﬁnd out’ something, one
+could do so readily by talking to an expert, consulting a host of scientiﬁc
+treatises and periodicals, encyclopaedias and engineering textbooks, as
+Roberts no doubt did.
+The other example is the early applications of chemistry to industry.
+Most of what chemistry could do for the economy had to await the devel-
+opment of organic chemistry in the 1830s by von Liebig and Wöhler, and
+Cambridge Histories Online © Cambridge University Press, 2008</div>
+                </div>
+            </div>
+        </div>
+        <div class="timestamp">
+            Generated on July 19, 2025 at 12:31 PM
+        </div>
+    </div>
+</body>
+</html>

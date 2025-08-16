@@ -14,6 +14,8 @@ from langchain.prompts import PromptTemplate
 from colorama import Fore, Style, init
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from rich.console import Console
+from rich.markdown import Markdown
 from pydantic import SecretStr
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain_voyageai import VoyageAIEmbeddings
@@ -30,10 +32,37 @@ except ImportError:
     CohereRerank = None
 from tqdm import tqdm
 import time
+from .document_generator import DocumentGenerator
 
 load_dotenv()
-# Initialize colorama
+# Initialize colorama and Rich console
 init(autoreset=True)
+console = Console()
+
+
+def filter_metadata(metadata: dict) -> dict:
+    """Filter out unnecessary metadata fields for cleaner output"""
+    # Fields to exclude from metadata display
+    excluded_fields = {
+        'producer', 'creator', 'author', 'subject', 'keywords',
+        'creation_date', 'modification_date', 'trapped', 'encrypted'
+    }
+    
+    # Only keep relevant fields
+    relevant_fields = {
+        'source', 'title', 'page', 'relevance_score', 'file_path'
+    }
+    
+    filtered = {}
+    for key, value in metadata.items():
+        # Convert key to lowercase for case-insensitive comparison
+        key_lower = key.lower()
+        
+        # Include if it's a relevant field and not in excluded list
+        if key_lower in relevant_fields or (key_lower not in excluded_fields and key in relevant_fields):
+            filtered[key] = value
+            
+    return filtered
 
 
 class ColorHandler(logging.StreamHandler):
@@ -85,6 +114,7 @@ class SymbiontCLI:
         llm_response: str,
         output_directory: str,
         q_list: str | None,
+        output_file: str | None = None,
     ):
         load_dotenv()
         self.config = self.load_config()
@@ -94,6 +124,7 @@ class SymbiontCLI:
         self.llm_response = llm_response
         self.output_directory = output_directory
         self.q_list = q_list
+        self.output_file = output_file
 
         logger.info("Initializing SymbiontCLI...")
         if self.docs_directory and not os.path.isdir(self.docs_directory):
@@ -121,6 +152,7 @@ class SymbiontCLI:
         self.llm = self.initialize_llm()
         self.qa_stuff = self.setup_qa()
         self.compressor = init_reranker(self.config)
+        self.document_generator = DocumentGenerator() if self.output_file else None
         logger.info("SymbiontCLI initialized successfully.")
 
     def load_config(self):
@@ -298,10 +330,10 @@ class SymbiontCLI:
             f.write("\n" + "=" * 40 + "\n")
             for doc in results:
                 f.write("Document Metadata:\n")
-                f.write(f"Source: {doc.metadata['source']}, ")
-                f.write(f"Title: {doc.metadata['title']}, ")
-                f.write(f"Page: {doc.metadata['page']} ")
-                f.write(f"Relevance: {doc.metadata.get('relevance_score', 'N/A')}\n")
+                filtered_metadata = filter_metadata(doc.metadata)
+                for key, value in filtered_metadata.items():
+                    f.write(f"{key}: {value}, ")
+                f.write("\n")
                 # f.write("\n" + self.__remove_next_line(doc.page_content) + "\n")
                 f.write("\n" + "=" * 40 + "\n")
 
@@ -309,7 +341,8 @@ class SymbiontCLI:
         for doc in results:
             self.context += self.__remove_next_line(doc.page_content) + " "
             logger.info("Document Metadata:")
-            for key, value in doc.metadata.items():
+            filtered_metadata = filter_metadata(doc.metadata)
+            for key, value in filtered_metadata.items():
                 logger.info(f"  {key}: {value}")
             logger.info("Page Content:")
             logger.info("\n" + self.__remove_next_line(doc.page_content))
@@ -327,15 +360,46 @@ class SymbiontCLI:
             results = compression_retriever.invoke(query)
             self.print_search_results(results[::-1])
 
+            response = None
+            processing_info = {}
+            
             if self.llm_response.lower() == "no":
                 self.log_search_results_to_file(results, query)
-                return
-            logger.info("Generating response from LLM...")
-            with get_openai_callback() as cb:
-                response = self.qa_stuff.run({"context": self.context, "query": query})
-                logger.critical("\n" + str(cb))
-                logger.info("\n" + response)
-            self.log_search_results_to_file(results, query, response)
+            else:
+                logger.info("Generating response from LLM...")
+                with get_openai_callback() as cb:
+                    response = self.qa_stuff.run({"context": self.context, "query": query})
+                    logger.critical("\n" + str(cb))
+                    
+                    # Display response with Rich markdown rendering
+                    console.print("\n[bold blue]🤖 AI Response:[/bold blue]")
+                    markdown = Markdown(response)
+                    console.print(markdown)
+                    
+                    # Store processing info for document generation
+                    processing_info = {
+                        "total_tokens": cb.total_tokens,
+                        "prompt_tokens": cb.prompt_tokens,
+                        "completion_tokens": cb.completion_tokens,
+                        "total_cost": cb.total_cost if hasattr(cb, 'total_cost') else None
+                    }
+                
+                self.log_search_results_to_file(results, query, response)
+            
+            # Generate document if output file is specified
+            if self.output_file and self.document_generator:
+                logger.info(f"Generating document: {self.output_file}")
+                self.document_generator.set_data(
+                    query=query,
+                    collection_name=self.collection_name,
+                    search_results=results,
+                    llm_response=response,
+                    config_info=self.config,
+                    processing_info=processing_info
+                )
+                self.document_generator.generate_document(self.output_file)
+                logger.info(f"Document saved: {self.output_file}")
+                
         except Exception as e:
             logger.error(f"Error during search and QA: {e}")
 
