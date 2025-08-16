@@ -162,7 +162,7 @@ def ask(
     input_file: Optional[str] = typer.Option(None, "--file", "-f", help="Read questions from file"),
     input_format: str = typer.Option("text", "--format", help="Input format: text, json, csv, yaml"),
     batch: bool = typer.Option(False, "--batch", "-b", help="Process multiple questions without interaction"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf, .html)"),
 ):
     """
     🔍 Ask questions about your documents with flexible input formats.
@@ -176,6 +176,7 @@ def ask(
         symbiont ask -d docs/papers "methodology"                  # Auto-create collection
         symbiont ask "research question" -o report.docx            # Save to Word document
         symbiont ask "analysis query" -o results.pdf               # Save to PDF document
+        symbiont ask "findings summary" -o report.html             # Save to HTML document
     """
     
     # Handle input from file
@@ -355,7 +356,7 @@ def chat(
     output_directory: str = typer.Option("search_results", "--output-dir", help="Output directory"),
     q_list: Optional[str] = typer.Option(None, "--questions", "-q", help="File with questions to process"),
     quick: bool = typer.Option(False, "--quick", help="Use last used collection"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save output to file (supports .docx, .pdf, .html)"),
 ):
     """
     💬 Chat with your documents using AI.
@@ -366,6 +367,7 @@ def chat(
         symbiont chat docs/research             # Auto-name collection from folder
         symbiont chat docs/papers economics -o session.docx  # Save session to Word
         symbiont chat docs/research --output results.pdf     # Save session to PDF
+        symbiont chat docs/research --output session.html    # Save session to HTML
     """
     # Handle quick mode - use last collection
     if quick:

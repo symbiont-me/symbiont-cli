@@ -87,6 +87,8 @@ class DocumentGenerator:
             self._generate_word_document(output_path)
         elif file_path.suffix.lower() == '.pdf':
             self._generate_pdf_document(output_path)
+        elif file_path.suffix.lower() == '.html':
+            self._generate_html_document(output_path)
         else:
             raise ValueError(f"Unsupported file format: {file_path.suffix}")
     
@@ -308,3 +310,264 @@ class DocumentGenerator:
         
         # Build PDF
         doc.build(story)
+    
+    def _generate_html_document(self, output_path: str):
+        """Generate an HTML document"""
+        html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Query Results</title>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }}
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }}
+        h1 {{
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }}
+        h2 {{
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }}
+        h3 {{
+            color: #27ae60;
+            margin-top: 25px;
+        }}
+        .query-info {{
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }}
+        .query-info table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        .query-info td {{
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+        }}
+        .query-info td:first-child {{
+            background-color: #d5dbdb;
+            font-weight: bold;
+            width: 150px;
+        }}
+        .llm-response {{
+            background-color: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            font-style: italic;
+        }}
+        .config-section {{
+            background-color: #fdf2e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }}
+        .config-section ul {{
+            margin: 10px 0;
+            padding-left: 20px;
+        }}
+        .document {{
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }}
+        .document-header {{
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }}
+        .document-content {{
+            padding: 20px;
+        }}
+        .metadata-table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }}
+        .metadata-table td {{
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }}
+        .metadata-table td:first-child {{
+            background-color: #e3f2fd;
+            font-weight: bold;
+            width: 150px;
+        }}
+        .content-section {{
+            background-color: #fafafa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 3px solid #95a5a6;
+        }}
+        .content-text {{
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }}
+        .timestamp {{
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }}
+        .relevance-score {{
+            background-color: #f39c12;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Research Query Results</h1>
+        
+        <div class="query-info">
+            <table>
+                <tr>
+                    <td>Query:</td>
+                    <td>{self._escape_html(self.data.query)}</td>
+                </tr>
+                <tr>
+                    <td>Collection:</td>
+                    <td>{self._escape_html(self.data.collection_name)}</td>
+                </tr>
+                <tr>
+                    <td>Generated:</td>
+                    <td>{self.data.timestamp.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                </tr>
+                <tr>
+                    <td>Results Found:</td>
+                    <td>{len(self.data.search_results)}</td>
+                </tr>
+            </table>
+        </div>"""
+
+        # LLM Response Section
+        if self.data.llm_response:
+            html_content += f"""
+        <h2>AI Generated Summary</h2>
+        <div class="llm-response">
+            {self._escape_html(self.data.llm_response)}
+        </div>"""
+
+        # Configuration Section
+        if self.data.config_info:
+            html_content += """
+        <h2>Configuration</h2>
+        <div class="config-section">"""
+            
+            for key, value in self.data.config_info.items():
+                if isinstance(value, dict):
+                    html_content += f"<h3>{key.title()}</h3><ul>"
+                    for sub_key, sub_value in value.items():
+                        html_content += f"<li><strong>{sub_key}:</strong> {self._escape_html(str(sub_value))}</li>"
+                    html_content += "</ul>"
+                else:
+                    html_content += f"<p><strong>{key.title()}:</strong> {self._escape_html(str(value))}</p>"
+            
+            html_content += "</div>"
+
+        # Search Results Section
+        if self.data.search_results:
+            html_content += """
+        <h2>Retrieved Documents</h2>"""
+            
+            for i, result in enumerate(self.data.search_results, 1):
+                html_content += f"""
+        <div class="document">
+            <div class="document-header">
+                Document {i}"""
+                
+                # Add relevance score if available
+                if result.get('relevance_score') and result['relevance_score'] != 'N/A':
+                    html_content += f""" <span class="relevance-score">Score: {result['relevance_score']}</span>"""
+                
+                html_content += """
+            </div>
+            <div class="document-content">"""
+                
+                # Metadata
+                if result['metadata']:
+                    filtered_metadata = filter_metadata(result['metadata'])
+                    if filtered_metadata:
+                        html_content += """
+                <table class="metadata-table">"""
+                        for key, value in filtered_metadata.items():
+                            html_content += f"""
+                    <tr>
+                        <td>{key.title()}</td>
+                        <td>{self._escape_html(str(value))}</td>
+                    </tr>"""
+                        html_content += """
+                </table>"""
+                
+                # Content
+                html_content += f"""
+                <h3>Content</h3>
+                <div class="content-section">
+                    <div class="content-text">{self._escape_html(result['content'])}</div>
+                </div>
+            </div>
+        </div>"""
+
+        html_content += f"""
+        <div class="timestamp">
+            Generated on {self.data.timestamp.strftime('%B %d, %Y at %I:%M %p')}
+        </div>
+    </div>
+</body>
+</html>"""
+
+        # Write to file
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+    
+    def _escape_html(self, text: str) -> str:
+        """Escape HTML special characters"""
+        if not isinstance(text, str):
+            text = str(text)
+        
+        replacements = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+        }
+        
+        for char, replacement in replacements.items():
+            text = text.replace(char, replacement)
+        
+        return text
