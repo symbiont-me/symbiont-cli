@@ -1,0 +1,16 @@
+[general]
+llm_name = "gpt-4o-mini"
+
+[embeddings]
+model = "huggingface"
+# model = "openai"
+# model = "voyage"
+# model = "jina"
+
+[reranker]
+# reranker = "cohere"
+reranker = "huggingface"
+
+[qdrant]
+host = "localhost"
+port = 6333
